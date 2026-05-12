@@ -1,10 +1,7 @@
-name: Build Windows EXE
+name: Build Windows Calculator EXE
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - work
 
 jobs:
   build-exe:
@@ -19,14 +16,14 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install build dependencies
+      - name: Install PyInstaller
         run: python -m pip install --upgrade pip pyinstaller
 
-      - name: Build EXE
-        run: pyinstaller --onefile --name calculator calculator.py
+      - name: Build GUI EXE
+        run: pyinstaller --windowed --onefile --name BeautifulCalculator calculator_gui.py
 
       - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
-          name: calculator-exe
-          path: dist/calculator.exe
+          name: BeautifulCalculator-exe
+          path: dist/BeautifulCalculator.exe
