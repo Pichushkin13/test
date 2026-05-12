@@ -1,30 +1,49 @@
 # Calculator
 
-## Запуск на "неподготовленном" Windows (без установки Python)
+## Почему окно сразу закрывается
 
-Если на компьютере нет Python и ничего нельзя устанавливать, используйте файл:
+Если `.bat` запускать двойным кликом, окно могло закрываться до того, как вы успеваете увидеть результат.
+Теперь `portable_calculator_windows.bat` работает в интерактивном режиме и ставит `pause`, поэтому результат остаётся на экране.
 
-- `portable_calculator_windows.bat`
+## Вариант 1: без установки Python (BAT)
 
-Это полностью автономный BAT-скрипт (работает в стандартном CMD/PowerShell Windows).
+Запустите файл `portable_calculator_windows.bat` двойным кликом.
+Он спросит:
+- первое число,
+- операцию,
+- второе число,
 
-Пример запуска:
+и покажет результат.
+
+Также можно запускать аргументами:
 
 ```bat
 portable_calculator_windows.bat 10 + 5
 ```
 
-> Ограничение автономного BAT-варианта: поддерживаются только **целые числа**.
+> Ограничение BAT-варианта: только целые числа.
 
-## Вариант на Python (если Python уже установлен)
+## Вариант 2: EXE файл
 
-- `calculator.py`
-- `run_calculator_windows.bat`
+Если нужен именно `.exe`, добавлен скрипт сборки `build_windows_exe.ps1`.
+Он создаёт `dist\calculator.exe` через PyInstaller.
 
-Пример:
+### Как собрать EXE
 
-```bat
-run_calculator_windows.bat 10 + 5
+```powershell
+powershell -ExecutionPolicy Bypass -File .\build_windows_exe.ps1
+```
+
+После сборки запускайте:
+
+```powershell
+.\dist\calculator.exe 10 + 5
+```
+
+## Python-версия (если Python уже установлен)
+
+```powershell
+py calculator.py 10 "+" 5
 ```
 
 ## Linux / macOS

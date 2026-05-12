@@ -1,47 +1,67 @@
 @echo off
 setlocal ENABLEEXTENSIONS
 
-REM Portable Windows calculator with no extra dependencies.
-REM Supports integer operations: + - * /
-REM Usage:
-REM   portable_calculator_windows.bat 10 + 5
+REM Double-click friendly portable Windows calculator (integer mode).
+REM If arguments are omitted, enters interactive mode.
 
-if "%~1"=="" goto :usage
+if "%~1"=="" goto :interactive
 if "%~2"=="" goto :usage
 if "%~3"=="" goto :usage
+if not "%~4"=="" goto :usage
 
 set "A=%~1"
 set "OP=%~2"
 set "B=%~3"
+goto :compute
 
-if not "%~4"=="" goto :usage
+:interactive
+cls
+echo ==========================================
+echo      Portable Windows Calculator
+echo ==========================================
+echo Supports integer operations: + - * /
+echo.
+set /p A=Enter first integer: 
+set /p OP=Enter operation (+ - * /): 
+set /p B=Enter second integer: 
+echo.
 
-if "%OP%"=="+" goto :calc
-if "%OP%"=="-" goto :calc
-if "%OP%"=="*" goto :calc
+:compute
+if "%OP%"=="+" goto :check_numbers
+if "%OP%"=="-" goto :check_numbers
+if "%OP%"=="*" goto :check_numbers
 if "%OP%"=="/" goto :check_div
 
 echo Error: unsupported operation "%OP%".
-exit /b 1
+goto :finish_error
 
 :check_div
 if "%B%"=="0" (
     echo Error: division by zero.
-    exit /b 1
+    goto :finish_error
 )
 
-:calc
+:check_numbers
 set /a RESULT=%A% %OP% %B% 2>nul
 if errorlevel 1 (
     echo Error: use integer numbers only. Example: 10 + 5
-    exit /b 1
+    goto :finish_error
 )
 
-echo %RESULT%
-exit /b 0
+echo Result: %RESULT%
+goto :finish_ok
 
 :usage
 echo Usage: portable_calculator_windows.bat ^<int_a^> ^<op^> ^<int_b^>
 echo Example: portable_calculator_windows.bat 10 + 5
-echo Supported operations: + - * /
+goto :finish_error
+
+:finish_ok
+echo.
+pause
+exit /b 0
+
+:finish_error
+echo.
+pause
 exit /b 1
