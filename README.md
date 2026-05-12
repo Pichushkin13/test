@@ -1,31 +1,31 @@
 # Calculator
 
-Простой калькулятор на Python с CLI.
+## Запуск на "неподготовленном" Windows (без установки Python)
 
-## Готовый файл для Windows
+Если на компьютере нет Python и ничего нельзя устанавливать, используйте файл:
 
-В репозитории есть готовый файл `run_calculator_windows.bat`, который можно запускать сразу из CMD/PowerShell.  
+- `portable_calculator_windows.bat`
+
+Это полностью автономный BAT-скрипт (работает в стандартном CMD/PowerShell Windows).
+
+Пример запуска:
+
+```bat
+portable_calculator_windows.bat 10 + 5
+```
+
+> Ограничение автономного BAT-варианта: поддерживаются только **целые числа**.
+
+## Вариант на Python (если Python уже установлен)
+
+- `calculator.py`
+- `run_calculator_windows.bat`
+
 Пример:
 
 ```bat
 run_calculator_windows.bat 10 + 5
 ```
-
-Скрипт автоматически пробует `py`, а если его нет — `python`.
-
-## Ручной запуск на Windows
-
-```powershell
-py calculator.py 10 "+" 5
-```
-
-Если `py` не работает:
-
-```powershell
-python calculator.py 10 "+" 5
-```
-
-Доступные операции: `+`, `-`, `*`, `/`.
 
 ## Linux / macOS
 
@@ -33,7 +33,7 @@ python calculator.py 10 "+" 5
 python3 calculator.py 10 '+' 5
 ```
 
-## Тесты
+## Тесты Python-версии
 
 ```bash
 python -m pytest -q
