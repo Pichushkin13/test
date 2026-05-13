@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Simple Windows-style calculator GUI."""
+"""Simple Windows-style calculator GUI with robust startup diagnostics."""
 
 from __future__ import annotations
 
+import datetime as dt
+import traceback
+from pathlib import Path
 import tkinter as tk
-from tkinter import ttk
+from tkinter import messagebox, ttk
+
+
+LOG_PATH = Path.home() / "BeautifulCalculator_error.log"
 
 
 class CalculatorApp:
@@ -26,7 +32,13 @@ class CalculatorApp:
 
         style = ttk.Style()
         style.theme_use("clam")
-        style.configure("Display.TLabel", background="#1f1f1f", foreground="#ffffff", font=("Segoe UI", 28), anchor="e")
+        style.configure(
+            "Display.TLabel",
+            background="#1f1f1f",
+            foreground="#ffffff",
+            font=("Segoe UI", 28),
+            anchor="e",
+        )
         style.configure("Calc.TButton", font=("Segoe UI", 14), padding=8)
 
         display = ttk.Label(container, textvariable=self.display_value, style="Display.TLabel")
@@ -36,11 +48,26 @@ class CalculatorApp:
         grid.pack(fill="both", expand=True)
 
         buttons = [
-            ("C", 0, 0, self.clear), ("⌫", 0, 1, self.backspace), ("%", 0, 2, lambda: self.append("%")), ("/", 0, 3, lambda: self.append("/")),
-            ("7", 1, 0, lambda: self.append("7")), ("8", 1, 1, lambda: self.append("8")), ("9", 1, 2, lambda: self.append("9")), ("*", 1, 3, lambda: self.append("*")),
-            ("4", 2, 0, lambda: self.append("4")), ("5", 2, 1, lambda: self.append("5")), ("6", 2, 2, lambda: self.append("6")), ("-", 2, 3, lambda: self.append("-")),
-            ("1", 3, 0, lambda: self.append("1")), ("2", 3, 1, lambda: self.append("2")), ("3", 3, 2, lambda: self.append("3")), ("+", 3, 3, lambda: self.append("+")),
-            ("+/-", 4, 0, self.negate), ("0", 4, 1, lambda: self.append("0")), (".", 4, 2, lambda: self.append(".")), ("=", 4, 3, self.evaluate),
+            ("C", 0, 0, self.clear),
+            ("⌫", 0, 1, self.backspace),
+            ("%", 0, 2, lambda: self.append("%")),
+            ("/", 0, 3, lambda: self.append("/")),
+            ("7", 1, 0, lambda: self.append("7")),
+            ("8", 1, 1, lambda: self.append("8")),
+            ("9", 1, 2, lambda: self.append("9")),
+            ("*", 1, 3, lambda: self.append("*")),
+            ("4", 2, 0, lambda: self.append("4")),
+            ("5", 2, 1, lambda: self.append("5")),
+            ("6", 2, 2, lambda: self.append("6")),
+            ("-", 2, 3, lambda: self.append("-")),
+            ("1", 3, 0, lambda: self.append("1")),
+            ("2", 3, 1, lambda: self.append("2")),
+            ("3", 3, 2, lambda: self.append("3")),
+            ("+", 3, 3, lambda: self.append("+")),
+            ("+/-", 4, 0, self.negate),
+            ("0", 4, 1, lambda: self.append("0")),
+            (".", 4, 2, lambda: self.append(".")),
+            ("=", 4, 3, self.evaluate),
         ]
 
         for text, row, col, command in buttons:
@@ -88,10 +115,36 @@ class CalculatorApp:
             self.display_value.set("Error")
 
 
+def _write_error_log(exc: BaseException) -> Path:
+    details = "\n".join(
+        [
+            f"[{dt.datetime.now().isoformat()}] Startup failure:",
+            "",
+            "".join(traceback.format_exception(type(exc), exc, exc.__traceback__)),
+        ]
+    )
+    LOG_PATH.write_text(details, encoding="utf-8")
+    return LOG_PATH
+
+
 def main() -> None:
-    root = tk.Tk()
-    CalculatorApp(root)
-    root.mainloop()
+    try:
+        root = tk.Tk()
+        CalculatorApp(root)
+        root.mainloop()
+    except Exception as exc:
+        log_path = _write_error_log(exc)
+        try:
+            fallback = tk.Tk()
+            fallback.withdraw()
+            messagebox.showerror(
+                "BeautifulCalculator error",
+                "Приложение не запустилось.\n"
+                f"Лог сохранен: {log_path}",
+            )
+            fallback.destroy()
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":

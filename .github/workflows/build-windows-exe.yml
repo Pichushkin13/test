@@ -19,11 +19,20 @@ jobs:
       - name: Install PyInstaller
         run: python -m pip install --upgrade pip pyinstaller
 
-      - name: Build GUI EXE
+      - name: Build GUI EXE (onefile)
         run: pyinstaller --windowed --onefile --name BeautifulCalculator calculator_gui.py
 
-      - name: Upload EXE artifact
+      - name: Build GUI EXE (onedir fallback)
+        run: pyinstaller --windowed --onedir --name BeautifulCalculator_portable calculator_gui.py
+
+      - name: Archive onedir build
+        shell: pwsh
+        run: Compress-Archive -Path dist/BeautifulCalculator_portable/* -DestinationPath dist/BeautifulCalculator_portable.zip
+
+      - name: Upload EXE artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: BeautifulCalculator-exe
-          path: dist/BeautifulCalculator.exe
+          name: BeautifulCalculator-builds
+          path: |
+            dist/BeautifulCalculator.exe
+            dist/BeautifulCalculator_portable.zip
