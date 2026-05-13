@@ -1,30 +1,24 @@
-# Beautiful Calculator (Windows GUI)
+# Beautiful Calculator (Windows Native App)
 
-Это GUI-калькулятор в стиле Windows (базовые функции: `+`, `-`, `*`, `/`, `%`, `+/-`, `.`).
+Проект переписан на **C# / WinForms** для более предсказуемого запуска на Windows.
+Итоговый файл — **самодостаточный EXE** (self-contained), Python не нужен.
 
-## Если EXE не открывается
+## Почему это стабильнее
 
-Симптом «мелькает консоль и ничего не происходит» обычно связан с:
-- блокировкой антивирусом/SmartScreen,
-- проблемой распаковки `--onefile` EXE,
-- падением приложения до отображения окна.
+- Приложение нативно для Windows (.NET WinForms).
+- Сборка делает self-contained single-file EXE.
+- На ПК пользователя не требуется Python/pyinstaller.
 
-Я добавил более стабильную схему запуска:
-1. `BeautifulCalculator.exe` (`--onefile`).
-2. `BeautifulCalculator_portable.zip` (`--onedir`) — fallback, обычно стабильнее на некоторых ПК.
+## Как получить готовый EXE
 
-Также добавлено логирование ошибок запуска в файл:
-- `%USERPROFILE%\BeautifulCalculator_error.log`
+1. Откройте репозиторий на GitHub.
+2. Перейдите в **Actions**.
+3. Запустите workflow **Build Windows Calculator EXE**.
+4. Скачайте artifact `BeautifulCalculator-exe`.
+5. Запустите `BeautifulCalculator.exe`.
 
-## Как получить и запустить на Windows
+## Что в репозитории
 
-1. Откройте GitHub → **Actions**.
-2. Запустите workflow **Build Windows Calculator EXE**.
-3. Скачайте artifact `BeautifulCalculator-builds`.
-4. Сначала попробуйте `BeautifulCalculator.exe`.
-5. Если не запускается — распакуйте `BeautifulCalculator_portable.zip` и запустите `BeautifulCalculator_portable.exe`.
-
-## Что есть в репозитории
-
-- `calculator_gui.py` — GUI-калькулятор.
-- `.github/workflows/build-windows-exe.yml` — сборка двух вариантов EXE (onefile + onedir fallback).
+- `src/Program.cs` — GUI-калькулятор (Windows Forms).
+- `src/BeautifulCalculator.csproj` — конфигурация .NET проекта.
+- `.github/workflows/build-windows-exe.yml` — CI-сборка self-contained EXE.

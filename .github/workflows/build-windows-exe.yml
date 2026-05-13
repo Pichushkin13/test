@@ -11,28 +11,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          python-version: '3.12'
+          dotnet-version: 8.0.x
 
-      - name: Install PyInstaller
-        run: python -m pip install --upgrade pip pyinstaller
+      - name: Restore
+        run: dotnet restore src/BeautifulCalculator.csproj
 
-      - name: Build GUI EXE (onefile)
-        run: pyinstaller --windowed --onefile --name BeautifulCalculator calculator_gui.py
+      - name: Publish self-contained EXE
+        run: dotnet publish src/BeautifulCalculator.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -o dist
 
-      - name: Build GUI EXE (onedir fallback)
-        run: pyinstaller --windowed --onedir --name BeautifulCalculator_portable calculator_gui.py
-
-      - name: Archive onedir build
-        shell: pwsh
-        run: Compress-Archive -Path dist/BeautifulCalculator_portable/* -DestinationPath dist/BeautifulCalculator_portable.zip
-
-      - name: Upload EXE artifacts
+      - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
-          name: BeautifulCalculator-builds
-          path: |
-            dist/BeautifulCalculator.exe
-            dist/BeautifulCalculator_portable.zip
+          name: BeautifulCalculator-exe
+          path: dist/BeautifulCalculator.exe
