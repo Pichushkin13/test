@@ -1,21 +1,30 @@
 # Beautiful Calculator (Windows Native App)
 
-Проект переписан на **C# / WinForms** для более предсказуемого запуска на Windows.
+Проект на **C# / WinForms** для предсказуемого запуска на Windows.
 Итоговый файл — **самодостаточный EXE** (self-contained), Python не нужен.
 
-## Почему это стабильнее
+## Новый workflow (чтобы легко отличать в Actions)
 
-- Приложение нативно для Windows (.NET WinForms).
-- Сборка делает self-contained single-file EXE.
-- На ПК пользователя не требуется Python/pyinstaller.
+Теперь workflow называется:
+
+- **Build BeautifulCalculator EXE v2 (WinForms)**
+
+И у каждого запуска будет понятный заголовок вида:
+
+- `Build EXE v2 • <branch> • run #<number>`
+
+Также артефакт переименован в:
+
+- `BeautifulCalculator-exe-v2`
 
 ## Как получить готовый EXE
 
 1. Откройте репозиторий на GitHub.
 2. Перейдите в **Actions**.
-3. Запустите workflow **Build Windows Calculator EXE**.
-4. Скачайте artifact `BeautifulCalculator-exe`.
-5. Запустите `BeautifulCalculator.exe`.
+3. Выберите workflow **Build BeautifulCalculator EXE v2 (WinForms)**.
+4. Нажмите **Run workflow**.
+5. Скачайте artifact `BeautifulCalculator-exe-v2`.
+6. Запустите `BeautifulCalculator.exe`.
 
 ## Что в репозитории
 
